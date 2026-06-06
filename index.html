@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RetroTrack - Panel de Admin</title>
+</head>
+<body>
+
+    <div id="seccion-login">
+        <h2>Iniciar Sesión</h2>
+        <input type="text" id="username" placeholder="Email">
+        <input type="password" id="password" placeholder="Contraseña">
+        <button id="btn-login">Entrar</button>
+    </div>
+
+    <div id="seccion-logout" style="display: none;">
+        <button id="btn-logout">Cerrar Sesión</button>
+    </div>
+</div>
+    <hr>
+
+    <section id="seccion-juegos">       
+        <h2>Añadir Nuevo Juego</h2>
+        <input type="text" id="input-nombre" placeholder="Nombre">
+        <input type="number" id="input-precio" placeholder="Precio">
+        <input type="number" id="input-stock" placeholder="Stock Local">
+        <input type="number" id="input-stock-global" placeholder="Stock Global">
+        <button id="btn-guardar">Guardar Juego</button>
+    </section>
+
+    <script src="js/login.js"></script>
+    
+    <script type="module" src="js/main.js"></script>
+    
+</body>
+</html>
