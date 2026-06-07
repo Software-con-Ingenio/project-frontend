@@ -81,9 +81,55 @@
 </section>
 
 
+
+<div id="seccion-platforms">
+
+    <h2>Gestión de Plataformas</h2>
+    
+    <div id="admin-platforms-input" >
+        <input type="text" id="input-nombre-plataforma" placeholder="Nueva plataforma">
+        <button id="btn-crear-plataforma">Agregar Plataforma</button>
+    </div>
+
+    <table>
+        <thead>
+            <tr><th>ID</th><th>Nombre</th><th>Acciones</th></tr>
+        </thead>
+        <tbody id="tabla-platforms-body"></tbody></table>
+</div>
+
+<div id="seccion-genres" style="display: none">
+    <h2>Gestión de Géneros</h2>
+    
+    <div id="admin-genres-input">
+        <input type="text" id="input-nombre-genero" placeholder="Nombre del género">
+        <button id="btn-crear-genero">Agregar Genre</button>
+    </div>
+
+    <table>
+        <thead>
+            <tr><th>ID</th><th>Nombre</th><th>Acciones x si le agregamos eliminar</th></tr>
+        </thead>
+        <tbody id="tabla-genres-body"></tbody> </table>
+</div>
+
+
+<div id="seccion-reportes"  style="display: none">
+    <h3>Generar Reportes</h3>
+    
+    <input type="date" id="fecha-diaria">
+    <button id="btn-reporte-diario">PDF Diario</button>
+
+    <input type="number" id="anio-mensual" placeholder="Año (2026)">
+    <input type="number" id="mes-mensual" placeholder="Mes (1-12)">
+    <button id="btn-reporte-mensual">PDF Mensual</button>
+
+    <button id="btn-reporte-total">Descargar Reporte Total</button>
+</div>
+
+
     <script src="js/login.js"></script>
     
     <script type="module" src="js/main.js"></script>
-    
 </body>
 </html>

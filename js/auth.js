@@ -7,7 +7,11 @@ export function verificarSesion() {
     const seccionUsuarios = document.getElementById('seccion-admin-usuarios');
     const seccionListaUsuarios = document.getElementById('seccion-lista-usuarios');
     const seccionEditar = document.getElementById('seccion-editar-usuario');
-
+    const seccionGenres = document.getElementById('seccion-genres');
+    const seccionPlatforms = document.getElementById('seccion-platforms');
+    const seccionReportes = document.getElementById('seccion-reportes');
+    //ese const lo hace tmbn copitot
+    
     const esAdmin = (token && idRol === "1");
 
     // Lógica para Juegos
@@ -23,10 +27,23 @@ export function verificarSesion() {
         seccionListaUsuarios.style.display = esAdmin ? 'block' : 'none';
     }
     if (seccionEditar) {
-    seccionEditar.style.display = 'none'; // Siempre oculto al refrescar
-}
-}
+        seccionEditar.style.display = 'none'; // Siempre oculto al refrescar
+    }
 
+    //eso es lo q copilot hace pa q solo se muestre al admin
+    if (seccionGenres) {
+        seccionGenres.style.display = esAdmin ? 'block' : 'none';
+    }
+
+    if (seccionPlatforms) {
+        seccionPlatforms.style.display = esAdmin ? 'block' : 'none';
+    }
+    if (seccionReportes) {
+        seccionReportes.style.display = esAdmin ? 'block' : 'none';
+    }
+
+
+}
 export function controlarVisibilidadBotones() {
     // ... (esto déjalo igual, está perfecto)
     const token = localStorage.getItem('access_token');
