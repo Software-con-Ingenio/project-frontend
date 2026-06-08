@@ -132,9 +132,58 @@
     <button id="btn-reporte-total">Descargar Reporte Total</button>
 </div>
 
+<section id="seccion-ventas" style="display: none;">
+    <h2>Registro de Ventas</h2>
+
+    <div>
+        <label for="venta-juego-select">Juego</label>
+        <select id="venta-juego-select"></select>
+
+        <label for="venta-cantidad">Cantidad</label>
+        <input type="number" id="venta-cantidad" min="1" value="1">
+
+        <button id="btn-agregar-item-venta">Agregar Item</button>
+    </div>
+
+    <h3>Detalle de la Venta</h3>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Juego</th>
+                <th>Cantidad</th>
+                <th>Stock Disponible</th>
+                <th>Accion</th>
+            </tr>
+        </thead>
+        <tbody id="tabla-venta-items-body"></tbody>
+    </table>
+
+    <div>
+        <button id="btn-calcular-venta">Calcular Resumen</button>
+        <button id="btn-confirmar-venta" disabled>Confirmar Venta</button>
+        <button id="btn-limpiar-venta">Limpiar</button>
+    </div>
+
+    <h3>Resumen de Venta</h3>
+    <div id="resumen-venta"><p>Sin resumen calculado.</p></div>
+    <p id="estado-venta"></p>
+</section>
+
 
 <div id="seccion-inventario-vendedor" style="display: none">
+    
     <h2>Control de Inventario vendedor</h2>
+
+        <div style="margin-bottom: 15px;">
+        <input type="text" id="input-buscar-vendedor" placeholder="Buscar juego...">
+            <select id="filtro-plataforma-vendedor">
+                <option value="">Todas las plataformas</option>
+                <option value="PlayStation">PlayStation</option>
+                <option value="Xbox">Xbox</option>
+                <option value="PC">PC</option>
+            </select>
+    </div>
+
     <table border="1">
         <thead>
             <tr>
@@ -151,6 +200,17 @@
 
 <div id="seccion-inventario-admin" style="display: none">
     <h2>Control de Inventario admin</h2>
+
+    <div style="margin-bottom: 15px;">
+        <input type="text" id="input-buscar" placeholder="Buscar por nombre...">
+        <select id="filtro-plataforma">
+            <option value="">Todas las plataformas</option>
+            <option value="PlayStation">PlayStation</option>
+            <option value="Xbox">Xbox</option>
+            <option value="PC">PC</option>
+        </select>
+    </div>
+
     <table border="1">
         <thead>
             <tr>

@@ -10,6 +10,7 @@ export function verificarSesion() {
     const seccionGenres = document.getElementById('seccion-genres');
     const seccionPlatforms = document.getElementById('seccion-platforms');
     const seccionReportes = document.getElementById('seccion-reportes');
+    const seccionVentas = document.getElementById('seccion-ventas');
     const seccionInventarioVendedor = document.getElementById('seccion-inventario-vendedor');
     const seccionInventarioAdmin = document.getElementById('seccion-inventario-admin');
     //ese const lo hace tmbn copitot
@@ -47,6 +48,9 @@ export function verificarSesion() {
     }
     if (seccionReportes) {
         seccionReportes.style.display = esAdmin ? 'block' : 'none';
+    }
+    if (seccionVentas) {
+        seccionVentas.style.display = (esAdmin || esVendedor) ? 'block' : 'none';
     }
 
     if (seccionInventarioAdmin) {

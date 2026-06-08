@@ -6,6 +6,8 @@ import { crearPlatform, cargarPlatforms} from './platforms.js';
 import { descargarReporte } from './reportes.js';
 import { cargarInventarioAdmin } from './inventario_admin.js';
 import { cargarInventarioVendedor } from './inventario_vendedor.js';
+import { inicializarVentas } from './ventas.js';
+
 document.addEventListener('DOMContentLoaded', () => {
     verificarSesion();
     controlarVisibilidadBotones();
@@ -15,9 +17,32 @@ document.addEventListener('DOMContentLoaded', () => {
     cargarPlatforms();
     cargarInventarioAdmin();
     cargarInventarioVendedor();
+    inicializarVentas();
 
 
 
+
+
+
+    const inputBuscar = document.getElementById('input-buscar');
+    if (inputBuscar) {
+        inputBuscar.addEventListener('input', window.filtrarJuegos);
+    }
+
+    const selectPlataforma = document.getElementById('filtro-plataforma');
+    if (selectPlataforma) {
+        selectPlataforma.addEventListener('change', window.filtrarJuegos);
+    }
+        
+    const inputBuscarV = document.getElementById('input-buscar-vendedor');
+    if (inputBuscarV) {
+        inputBuscarV.addEventListener('input', window.filtrarJuegosVendedor);
+    }
+
+    const selectPlataformaV = document.getElementById('filtro-plataforma-vendedor');
+    if (selectPlataformaV) {
+        selectPlataformaV.addEventListener('change', window.filtrarJuegosVendedor);
+    }
     
 
     const btnGuardarJuego = document.getElementById('btn-guardar');
@@ -34,9 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const btnCrearGenero = document.getElementById('btn-crear-genero');
     if (btnCrearGenero) btnCrearGenero.addEventListener('click', crearGenero);
-
-    const btnCrearGenero2 = document.getElementById('btn-crear-genero2');
-    if (btnCrearGenero2) btnCrearGenero2.addEventListener('click', crearGenero2);
 
     const btnCrearPlatform = document.getElementById('btn-crear-plataforma');
     if (btnCrearPlatform) btnCrearPlatform.addEventListener('click', crearPlatform);
