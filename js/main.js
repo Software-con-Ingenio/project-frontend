@@ -4,8 +4,8 @@ import { guardarUsuario, cargarUsuarios, guardarEdicion} from './usuarios.js'; /
 import { cargarGenres, crearGenero } from './generos.js';
 import { crearPlatform, cargarPlatforms} from './platforms.js';
 import { descargarReporte } from './reportes.js';
-
-
+import { cargarInventarioAdmin } from './inventario_admin.js';
+import { cargarInventarioVendedor } from './inventario_vendedor.js';
 document.addEventListener('DOMContentLoaded', () => {
     verificarSesion();
     controlarVisibilidadBotones();
@@ -13,7 +13,13 @@ document.addEventListener('DOMContentLoaded', () => {
     cargarUsuarios();
     cargarGenres();
     cargarPlatforms();
-    // Eventos
+    cargarInventarioAdmin();
+    cargarInventarioVendedor();
+
+
+
+    
+
     const btnGuardarJuego = document.getElementById('btn-guardar');
     if (btnGuardarJuego) btnGuardarJuego.addEventListener('click', guardarJuego);
 
@@ -28,7 +34,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const btnCrearGenero = document.getElementById('btn-crear-genero');
     if (btnCrearGenero) btnCrearGenero.addEventListener('click', crearGenero);
-    
+
+    const btnCrearGenero2 = document.getElementById('btn-crear-genero2');
+    if (btnCrearGenero2) btnCrearGenero2.addEventListener('click', crearGenero2);
+
     const btnCrearPlatform = document.getElementById('btn-crear-plataforma');
     if (btnCrearPlatform) btnCrearPlatform.addEventListener('click', crearPlatform);
 

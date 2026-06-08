@@ -10,10 +10,17 @@ export function verificarSesion() {
     const seccionGenres = document.getElementById('seccion-genres');
     const seccionPlatforms = document.getElementById('seccion-platforms');
     const seccionReportes = document.getElementById('seccion-reportes');
+    const seccionInventarioVendedor = document.getElementById('seccion-inventario-vendedor');
+    const seccionInventarioAdmin = document.getElementById('seccion-inventario-admin');
     //ese const lo hace tmbn copitot
     
     const esAdmin = (token && idRol === "1");
+    const esVendedor = (token && idRol === "2");
 
+     // Lógica para Inventario Vendedor
+     if (seccionInventarioVendedor) {
+        seccionInventarioVendedor.style.display = esVendedor ? 'block' : 'none';
+    }
     // Lógica para Juegos
     if (seccionJuegos) {
         seccionJuegos.style.display = esAdmin ? 'block' : 'none';
@@ -40,6 +47,10 @@ export function verificarSesion() {
     }
     if (seccionReportes) {
         seccionReportes.style.display = esAdmin ? 'block' : 'none';
+    }
+
+    if (seccionInventarioAdmin) {
+        seccionInventarioAdmin.style.display = esAdmin ? 'block' : 'none';
     }
 
 

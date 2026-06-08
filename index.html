@@ -7,11 +7,16 @@
 </head>
 <body>
 
+
+
+
     <div id="seccion-login">
         <h2>Iniciar Sesión</h2>
         <input type="text" id="username" placeholder="Email">
         <input type="password" id="password" placeholder="Contraseña">
         <button id="btn-login">Entrar</button>
+
+
     </div>
 
     <div id="seccion-logout" style="display: none;">
@@ -128,8 +133,42 @@
 </div>
 
 
+<div id="seccion-inventario-vendedor" style="display: none">
+    <h2>Control de Inventario vendedor</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Juego</th>
+                <th>Precio</th>
+                <th>Stock Local</th>
+                <th>Stock Global</th>
+                <th>¿Es Histórico?</th>
+            </tr>
+        </thead>
+        <tbody id="tabla-inventario-vendedor-body"></tbody>
+    </table>
+</div>
+
+<div id="seccion-inventario-admin" style="display: none">
+    <h2>Control de Inventario admin</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Juego</th>
+                <th>Precio</th>
+                <th>Stock Local</th>
+                <th>Stock Global</th>
+                <th>¿Es Histórico?</th>
+            </tr>
+        </thead>
+        <tbody id="tabla-inventario-admin-body"></tbody>
+    </table>
+</div>
+
+
+
+
     <script src="js/login.js"></script>
     
     <script type="module" src="js/main.js"></script>
-</body>
 </html>

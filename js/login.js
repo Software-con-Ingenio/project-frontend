@@ -69,5 +69,3 @@ document.getElementById('btn-logout').addEventListener('click', () => {
     alert("Has cerrado sesión correctamente.");
     window.location.reload(); // Recarga la página para volver al estado inicial
 });
-
-
