@@ -1,5 +1,5 @@
-// Variable global exclusiva para el vendedor
-let juegosDataVendedor = []; 
+// Variable global para el vendedor
+let juegosDataVendedor = [];
 
 export async function cargarInventarioVendedor() {
     const token = localStorage.getItem('access_token');
@@ -26,17 +26,17 @@ function renderizarTablaVendedor(lista) {
             <td>${j.nombre}</td>
             <td>$${j.precio}</td>
             <td>
-                <input type="number" value="${j.stock_local}" 
-                       onchange="actualizarStockV(${j.id_juego}, this.value)">
+                <input type="number" min="0" value="${j.stock_local}" 
+                       id="stock-v-${j.id_juego}">
             </td>
             <td>${j.stock_global || 0}</td>
-            <td>${j.es_historico ? 'Sí' : 'No'}</td>
+            <td><button type="button" onclick="actualizarStockV(${j.id_juego})">Guardar</button></td>
         `;
         tbody.appendChild(fila);
     });
 }
 
-// Filtro exclusivo para el vendedor (RF_10 y RF_11)
+// Filtro exclusivo para el vendedor
 window.filtrarJuegosVendedor = () => {
     const texto = document.getElementById('input-buscar-vendedor').value.toLowerCase();
     const plat = document.getElementById('filtro-plataforma-vendedor').value;
@@ -50,12 +50,32 @@ window.filtrarJuegosVendedor = () => {
     renderizarTablaVendedor(filtrados);
 };
 
-// Función de actualización exclusiva para el vendedor
-window.actualizarStockV = async (id, cantidad) => {
+// Función de actualización unificada para el vendedor
+window.actualizarStockV = async (id) => {
     const token = localStorage.getItem('access_token');
-    await fetch(`http://localhost:8000/juegos/${id}/stock?nueva_cantidad=${cantidad}`, {
+    const stockInput = document.getElementById(`stock-v-${id}`);
+    const stock_local = Number(stockInput.value);
+
+    if (Number.isNaN(stock_local) || stock_local < 0) {
+        alert('El stock debe ser un número válido y no negativo.');
+        return;
+    }
+
+    // Usamos el mismo endpoint unificado que el admin
+    const response = await fetch(`http://localhost:8000/juegos/${id}`, {
         method: 'PUT',
-        headers: { 'Authorization': `Bearer ${token}` }
+        headers: { 
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json' 
+        },
+        body: JSON.stringify({ stock_local }) // Solo enviamos el stock
     });
-    alert("Stock actualizado (V)");
+
+    if (response.ok) {
+        alert("Stock actualizado correctamente");
+        await cargarInventarioVendedor(); // Recargamos datos
+    } else {
+        const error = await response.json();
+        alert("Error: " + (error.detail || "No se pudo actualizar"));
+    }
 };

@@ -1,53 +1,101 @@
+// js/generos.js
+
+export async function crearGenero(event) {
+    if (event) event.preventDefault();
+
+    const data = {
+        nombre_genero: document.getElementById('input-nombre-genero').value
+    };
+
+    const token = localStorage.getItem('access_token');
+
+    try {
+        const response = await fetch('http://localhost:8000/genres', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` 
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+            alert("Género creado con éxito");
+            location.reload(); 
+        } else {
+            const error = await response.json();
+            alert("Error: " + (error.detail || "No se pudo crear el género"));
+        }
+    } catch (err) {
+        console.error("Error:", err);
+        alert("Error de conexión con el servidor");
+    }
+}
 
 export async function cargarGenres() {
-
-
     const token = localStorage.getItem('access_token');
     const idRol = localStorage.getItem('id_rol');
     const esAdmin = (token && idRol === "1");
 
     if (!esAdmin) return;
-    //ahi pa arriba es lo q copilot hace pa q solo se muestre al admin
+
     try {
-        const response = await fetch('http://localhost:8000/genres'); // URL con /genres
+        const response = await fetch('http://localhost:8000/genres', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        
+        if (!response.ok) throw new Error("Error al cargar géneros");
+        
         const genres = await response.json();
         const tbody = document.getElementById('tabla-genres-body');
-        
-        tbody.innerHTML = "";
+        tbody.innerHTML = ""; 
 
         genres.forEach(g => {
             const fila = document.createElement('tr');
-            fila.innerHTML = `
-                <td>${g.id_genero}</td>
-                <td>${g.nombre_genero}</td>
-                <td><button onclick="eliminarGenre(${g.id_genero})">Eliminar</button></td>
-            `;
+            
+            let htmlFila = `<td>${g.id_genero}</td><td>${g.nombre_genero}</td>`;
+            
+            if (esAdmin) {
+                htmlFila += `<td>
+                        <button class="btn-eliminar">Eliminar</button>
+                    </td>`;
+            } else {
+                htmlFila += `<td>-</td>`;
+            }
+            
+            fila.innerHTML = htmlFila;
+
+            if (esAdmin) {
+                const btnEliminar = fila.querySelector('.btn-eliminar');
+                btnEliminar.addEventListener('click', () => eliminarGenre(g.id_genero));
+            }
+            
             tbody.appendChild(fila);
         });
-    } catch (e) { console.error("Error cargando genres", e); }
+    } catch (error) {
+        console.error(error);
+    }
 }
 
-export async function crearGenero() {
-    const nombre = document.getElementById('input-nombre-genero').value;
-    if (!nombre) return alert("Escribe un nombre");
+export async function eliminarGenre(id) {
+    if (!confirm("¿Seguro que quieres eliminar este género?")) return;
 
-    const response = await fetch(`http://localhost:8000/genres?nombre=${encodeURIComponent(nombre)}`, {
-        method: 'POST',
-        headers: { 
-            'Authorization': `Bearer ${localStorage.getItem('access_token')}` 
-        }
-    });
+    const token = localStorage.getItem('access_token');
     
+    const response = await fetch(`http://localhost:8000/genres/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+
     if (response.ok) {
-        document.getElementById('input-nombre-genero').value = "";
-        cargarGenres();
+        alert("Eliminado");
+        location.reload();
     } else {
-        const errorData = await response.json();
-
-        const mensaje = errorData.detail || "Error desconocido";
-        alert("Error: " + mensaje);
-        console.error("Detalle completo del error:", errorData);
-        
-
+        alert("Error al eliminar");
     }
+}
+
+// Compatibilidad por si algún botón viejo intenta llamar a la función
+if (typeof window !== 'undefined') {
+    window.eliminarGenre = eliminarGenre;
 }

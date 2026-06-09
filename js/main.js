@@ -1,14 +1,15 @@
 import { verificarSesion, controlarVisibilidadBotones } from './auth.js';
-import { cargarJuegos, guardarJuego } from './juegos.js';
+import { cargarJuegos, guardarJuego, cargarOpcionesFormulario} from './juegos.js';
 import { guardarUsuario, cargarUsuarios, guardarEdicion} from './usuarios.js'; // <-- Importamos
 import { cargarGenres, crearGenero } from './generos.js';
-import { crearPlatform, cargarPlatforms} from './platforms.js';
+import { crearPlatform, cargarPlatforms} from './platforms.js?v=7.1';
 import { descargarReporte } from './reportes.js';
 import { cargarInventarioAdmin } from './inventario_admin.js';
 import { cargarInventarioVendedor } from './inventario_vendedor.js';
 import { inicializarVentas } from './ventas.js';
+import { historialManager } from './historial_ventas.js';
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     verificarSesion();
     controlarVisibilidadBotones();
     cargarJuegos();
@@ -18,6 +19,37 @@ document.addEventListener('DOMContentLoaded', () => {
     cargarInventarioAdmin();
     cargarInventarioVendedor();
     inicializarVentas();
+    cargarOpcionesFormulario();
+    // Si estás en la página de administración
+    const contenedor = document.getElementById('historial-container');
+    const seccionHistorial = document.getElementById('seccion-historial');
+    
+    // Si el contenedor existe en esta página...
+    if (contenedor) {
+        const token = localStorage.getItem('access_token');
+        const idRol = localStorage.getItem('id_rol');
+        const esAdmin = (token && idRol === "1");
+
+        if (!esAdmin) {
+            if (seccionHistorial) seccionHistorial.style.display = 'none';
+            if (contenedor) {
+                contenedor.innerHTML = "";
+                contenedor.style.display = 'none';
+            }
+        } else {
+            // Aseguramos que la sección y el contenedor estén visibles para administradores
+            if (seccionHistorial) seccionHistorial.style.display = '';
+            if (contenedor) contenedor.style.display = '';
+            try {
+                const ventas = await historialManager.obtenerVentas();
+                console.log("Ventas recibidas:", ventas); // <-- MIRA LA CONSOLA PARA VER SI LLEGAN DATOS
+                historialManager.renderizarHistorial(ventas);
+            } catch (error) {
+                contenedor.innerHTML = "Error al conectar con el servidor.";
+                console.error(error);
+            }
+        }
+    }
 
 
 

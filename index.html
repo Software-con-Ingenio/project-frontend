@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>RetroTrack - Panel de Admin</title>
 </head>
 <body>
@@ -31,6 +34,8 @@
         <input type="number" id="input-precio" placeholder="Precio">
         <input type="number" id="input-stock" placeholder="Stock Local">
         <input type="number" id="input-stock-global" placeholder="Stock Global">
+        <select id="select-plataforma"></select>
+        <select id="select-genero"></select>
         <button id="btn-guardar">Guardar Juego</button>
     </section>
 
@@ -191,7 +196,6 @@
                 <th>Precio</th>
                 <th>Stock Local</th>
                 <th>Stock Global</th>
-                <th>¿Es Histórico?</th>
             </tr>
         </thead>
         <tbody id="tabla-inventario-vendedor-body"></tbody>
@@ -218,7 +222,6 @@
                 <th>Precio</th>
                 <th>Stock Local</th>
                 <th>Stock Global</th>
-                <th>¿Es Histórico?</th>
             </tr>
         </thead>
         <tbody id="tabla-inventario-admin-body"></tbody>
@@ -226,9 +229,18 @@
 </div>
 
 
+<section id="seccion-historial">
+    <h2>Historial de Ventas</h2>
+    <div id="historial-container">
+        <p>Cargando ventas...</p>
+    </div>
+</section>
 
 
     <script src="js/login.js"></script>
     
     <script type="module" src="js/main.js"></script>
+    
+
+
 </html>

@@ -22,13 +22,14 @@ function renderizarTabla(lista) {
     tbody.innerHTML = "";
 
     lista.forEach(j => {
+        console.log("Datos del juego:", j); // <-- AÑADE ESTO
         const fila = document.createElement('tr');
         fila.innerHTML = `
             <td>${j.nombre}</td>
-            <td><input type="number" value="${j.precio}" onchange="actualizarPrecio(${j.id_juego}, this.value)"></td>
-            <td><input type="number" value="${j.stock_local}" onchange="actualizarStock(${j.id_juego}, this.value)"></td>
-            <td>${j.stock_global || 0}</td>
-            <td>${j.es_historico ? 'Sí' : 'No'}</td>
+            <td><input type="number" min="0" step="0.01" id="precio-${j.id_juego}" value="${j.precio}"></td>
+            <td><input type="number" min="0" step="1" id="stock-${j.id_juego}" value="${j.stock_local}"></td>
+            <td>${j.stock_global}</td>
+            <td><button type="button" onclick="actualizarJuego(${j.id_juego})">Guardar</button></td>
         `;
         tbody.appendChild(fila);
     });
@@ -49,22 +50,43 @@ window.filtrarJuegos = () => {
     renderizarTabla(filtrados);
 };
 
-// Función global para actualizar Stock (mantén tu lógica actual)
-window.actualizarStock = async (id, cantidad) => {
+window.actualizarJuego = async (id) => {
     const token = localStorage.getItem('access_token');
-    await fetch(`http://localhost:8000/juegos/${id}/stock?nueva_cantidad=${cantidad}`, {
-        method: 'PUT',
-        headers: { 'Authorization': `Bearer ${token}` }
-    });
-    alert("Stock actualizado");
-};
+    const precioInput = document.getElementById(`precio-${id}`);
+    const stockInput = document.getElementById(`stock-${id}`);
 
-// Función global para actualizar Precio (añadida para mayor control)
-window.actualizarPrecio = async (id, nuevoPrecio) => {
-    const token = localStorage.getItem('access_token');
-    await fetch(`http://localhost:8000/juegos/${id}/precio?nuevo_precio=${nuevoPrecio}`, {
+    if (!precioInput || !stockInput) {
+        alert('No se encontraron los campos del juego para actualizar.');
+        return;
+    }
+
+    const precio = Number(precioInput.value);
+    const stock_local = Number(stockInput.value);
+
+    if (Number.isNaN(precio) || precio < 0) {
+        alert('El precio debe ser un numero valido y no negativo.');
+        return;
+    }
+
+    if (Number.isNaN(stock_local) || stock_local < 0) {
+        alert('El stock local debe ser un numero valido y no negativo.');
+        return;
+    }
+    
+    const response = await fetch(`http://localhost:8000/juegos/${id}`, {
         method: 'PUT',
-        headers: { 'Authorization': `Bearer ${token}` }
+        headers: { 
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json' 
+        },
+        body: JSON.stringify({ precio, stock_local })
     });
-    alert("Precio actualizado");
+
+    if (response.ok) {
+        alert("¡Actualizado con éxito!");
+        await cargarInventarioAdmin();
+    } else {
+        const error = await response.json();
+        alert("Error: " + (error.detail || "No se pudo actualizar"));
+    }
 };

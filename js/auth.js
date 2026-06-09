@@ -13,6 +13,8 @@ export function verificarSesion() {
     const seccionVentas = document.getElementById('seccion-ventas');
     const seccionInventarioVendedor = document.getElementById('seccion-inventario-vendedor');
     const seccionInventarioAdmin = document.getElementById('seccion-inventario-admin');
+
+    const seccionHistorial = document.getElementById('seccion-historial'); // Asegúrate de tener este ID en tu HTML
     //ese const lo hace tmbn copitot
     
     const esAdmin = (token && idRol === "1");
@@ -55,6 +57,10 @@ export function verificarSesion() {
 
     if (seccionInventarioAdmin) {
         seccionInventarioAdmin.style.display = esAdmin ? 'block' : 'none';
+    }
+
+    if (seccionHistorial) {
+        seccionHistorial.style.display = esAdmin ? 'block' : 'none';
     }
 
 
