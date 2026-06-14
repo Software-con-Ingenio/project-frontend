@@ -40,7 +40,7 @@ export const historialManager = {
                 <td>${v.id_venta}</td>
                 <td>${v.usuario}</td>
                 <td>$${v.total.toFixed(2)}</td>
-                <td>${v.fecha}</td>
+                <td>${v.fecha.substring(0, 16)}</td>
                 <td>${listaJuegos}</td>
             </tr>
         `;

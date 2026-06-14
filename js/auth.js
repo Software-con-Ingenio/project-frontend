@@ -70,12 +70,17 @@ export function controlarVisibilidadBotones() {
     const token = localStorage.getItem('access_token');
     const seccionLogin = document.getElementById('seccion-login');
     const seccionLogout = document.getElementById('seccion-logout');
+    const btnVerPerfil = document.getElementById('btn-ver-perfil');
+    const seccionPerfil = document.getElementById('seccion-perfil');
 
     if (token) {
         if (seccionLogin) seccionLogin.style.display = 'none';
         if (seccionLogout) seccionLogout.style.display = 'block';
+        if (btnVerPerfil) btnVerPerfil.style.display = 'inline-block';
     } else {
         if (seccionLogin) seccionLogin.style.display = 'block';
         if (seccionLogout) seccionLogout.style.display = 'none';
+        if (btnVerPerfil) btnVerPerfil.style.display = 'none';
+        if (seccionPerfil) seccionPerfil.style.display = 'none';
     }
 }

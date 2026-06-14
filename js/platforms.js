@@ -3,28 +3,51 @@
 export async function crearPlatform(event) {
     if (event) event.preventDefault();
 
-    const data = {
-        nombre_plataforma: document.getElementById('input-nombre-plataforma').value
-    };
+    const inputNombre = document.getElementById('input-nombre-plataforma');
+    const nombrePlataforma = inputNombre ? inputNombre.value.trim() : '';
+
+    if (!nombrePlataforma) {
+        alert('Ingresa un nombre de plataforma');
+        return;
+    }
 
     const token = localStorage.getItem('access_token');
 
     try {
-        const response = await fetch('http://localhost:8000/platforms', {
+        // Compatibilidad con backend actual (query param) y contratos anteriores (JSON body).
+        let response = await fetch(`http://localhost:8000/platforms?nombre=${encodeURIComponent(nombrePlataforma)}`, {
             method: 'POST',
             headers: { 
-                'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}` 
-            },
-            body: JSON.stringify(data)
+            }
         });
+
+        if (!response.ok && (response.status === 400 || response.status === 404 || response.status === 405 || response.status === 415 || response.status === 422)) {
+            response = await fetch('http://localhost:8000/platforms', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    nombre: nombrePlataforma,
+                    nombre_plataforma: nombrePlataforma
+                })
+            });
+        }
 
         if (response.ok) {
             alert("Plataforma creada con éxito");
             location.reload(); 
         } else {
+            let detalle = "No se pudo crear la plataforma";
+        try {
             const error = await response.json();
-            alert("Error: " + (error.detail || "No se pudo crear la plataforma"));
+            detalle = error.detail || detalle;
+        } catch {
+            console.log("No fue posible obtener el detalle del error");
+        }
+            alert("Error: " + detalle);
         }
     } catch (err) {
         console.error("Error:", err);

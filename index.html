@@ -13,6 +13,7 @@
 
 
 
+
     <div id="seccion-login">
         <h2>Iniciar Sesión</h2>
         <input type="text" id="username" placeholder="Email">
@@ -28,6 +29,18 @@
 </div>
     <hr>
 
+
+<section id="seccion-perfil" style="display: none; border: 1px solid #ccc; padding: 20px;">
+    <h2>Mi Perfil</h2>
+    <p><strong>Nombre:</strong> <span id="perfil-nombre"></span></p>
+    <p><strong>Email:</strong> <span id="perfil-email"></span></p>
+    <p><strong>Rol:</strong> <span id="perfil-rol"></span></p>
+    <p><strong>Total Ventas:</strong> <span id="perfil-ventas"></span></p>
+    <button onclick="document.getElementById('seccion-perfil').style.display='none'">Cerrar</button>
+</section>
+
+<button id="btn-ver-perfil">Ver Mi Perfil</button>
+    
     <section id="seccion-juegos">       
         <h2>Añadir Nuevo Juego</h2>
         <input type="text" id="input-nombre" placeholder="Nombre">

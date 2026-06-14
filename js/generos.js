@@ -1,31 +1,56 @@
-// js/generos.js
-
 export async function crearGenero(event) {
     if (event) event.preventDefault();
 
-    const data = {
-        nombre_genero: document.getElementById('input-nombre-genero').value
-    };
+    const inputNombre = document.getElementById('input-nombre-genero');
+    const nombreGenero = inputNombre ? inputNombre.value.trim() : '';
+
+    if (!nombreGenero) {
+        alert('Ingresa un nombre de género');
+        return;
+    }
 
     const token = localStorage.getItem('access_token');
 
     try {
-        const response = await fetch('http://localhost:8000/genres', {
+        // Intento 1: Como Query Parameter
+        let response = await fetch(`http://localhost:8000/genres?nombre=${encodeURIComponent(nombreGenero)}`, {
             method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}` 
-            },
-            body: JSON.stringify(data)
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
         });
+
+        // Intento 2: Como JSON Body
+        if (!response.ok && response.status >= 400) {
+            response = await fetch('http://localhost:8000/genres', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    nombre: nombreGenero,
+                    nombre_genero: nombreGenero
+                })
+            });
+        }
 
         if (response.ok) {
             alert("Género creado con éxito");
-            location.reload(); 
+            location.reload();
         } else {
-            const error = await response.json();
-            alert("Error: " + (error.detail || "No se pudo crear el género"));
+            let detalle = "No se pudo crear el género";
+
+            try {
+                const error = await response.json();
+                detalle = error.detail || detalle;
+            } catch {
+                console.log("No fue posible obtener el detalle del error");
+            }
+
+            alert("Error: " + detalle);
         }
+
     } catch (err) {
         console.error("Error:", err);
         alert("Error de conexión con el servidor");
