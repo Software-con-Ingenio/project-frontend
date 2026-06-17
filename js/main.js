@@ -52,6 +52,27 @@ import { inicializarVentas } from './ventas.js';
 import { historialManager } from './historial_ventas.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
+    const btnTema = document.getElementById('btn-tema');
+    const temaGuardado = localStorage.getItem('tema');
+    const preferenciaSistema = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    const temaActual = temaGuardado || preferenciaSistema;
+    
+    if (temaActual === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+    }
+
+    if (btnTema) {
+        btnTema.addEventListener('click', () => {
+            if (document.documentElement.getAttribute('data-theme') === 'light') {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.setItem('tema', 'dark');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+                localStorage.setItem('tema', 'light');
+            }
+        });
+    }
+
     try { verificarSesion(); } catch(e) { console.error(e); }
     try { controlarVisibilidadBotones(); } catch(e) { console.error(e); }
     try { cargarJuegos(); } catch(e) { console.error(e); }

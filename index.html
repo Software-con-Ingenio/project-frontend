@@ -11,16 +11,13 @@
 </head>
 <body>
 
-
-
+    <button id="btn-tema" class="theme-toggle-btn">🌓 Cambiar Tema</button>
 
     <div id="seccion-login">
         <h2>Iniciar Sesión</h2>
         <input type="text" id="username" placeholder="Email">
         <input type="password" id="password" placeholder="Contraseña">
         <button id="btn-login">Entrar</button>
-
-
     </div>
 
     <div id="seccion-logout" style="display: none;">
@@ -39,208 +36,178 @@
         <button id="btn-guardar">Guardar Juego</button>
     </section>
 
-    
-<section id="seccion-admin-usuarios" style="display: none;">
-    <h3>Gestión de Usuarios</h3>
-    
-    <div class="formulario-usuario">
-        <input type="text" id="input-nombre-usuario" placeholder="Nombre completo">
-        <input type="email" id="input-email-usuario" placeholder="Email">
-        <input type="password" id="input-pass-usuario" placeholder="Contraseña">
-        
-        <label for="input-rol">Rol:</label>
-        <select id="input-rol">
-            <option value="1">Administrador</option>
-            <option value="2">Vendedor</option>
-        </select>
-        
-        <button id="btn-guardar-usuario">Crear Usuario</button>
-    </div>
-</section>
-
-    <section id="seccion-editar-usuario" style="display: none;">
-    <h3>Editar Usuario</h3>
-    <input type="hidden" id="edit-id">
-    <input type="text" id="edit-nombre">
-    <input type="email" id="edit-email">
-    <select id="edit-rol">
-        <option value="1">Admin</option>
-        <option value="2">Vendedor</option>
-    </select>
-    <select id="edit-activo">
-        <option value="true">Activo</option>
-        <option value="false">Inactivo</option>
-    </select>
-    <button id="btn-guardar-edicion">Guardar Cambios</button>
-    <button onclick="document.getElementById('seccion-editar-usuario').style.display='none'">Cancelar</button>
+    <section id="seccion-admin-usuarios" style="display: none;">
+        <h3>Gestión de Usuarios</h3>
+        <div class="formulario-usuario">
+            <input type="text" id="input-nombre-usuario" placeholder="Nombre completo">
+            <input type="email" id="input-email-usuario" placeholder="Email">
+            <input type="password" id="input-pass-usuario" placeholder="Contraseña">
+            <label for="input-rol">Rol:</label>
+            <select id="input-rol">
+                <option value="1">Administrador</option>
+                <option value="2">Vendedor</option>
+            </select>
+            <button id="btn-guardar-usuario">Crear Usuario</button>
+        </div>
     </section>
 
-<section id="seccion-lista-usuarios" style="display: none">
-    <h3>Usuarios Registrados</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Email</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody id="tabla-usuarios-body">
-            </tbody>
-    </table>
-</section>
+    <section id="seccion-editar-usuario" style="display: none;">
+        <h3>Editar Usuario</h3>
+        <input type="hidden" id="edit-id">
+        <input type="text" id="edit-nombre">
+        <input type="email" id="edit-email">
+        <select id="edit-rol">
+            <option value="1">Admin</option>
+            <option value="2">Vendedor</option>
+        </select>
+        <select id="edit-activo">
+            <option value="true">Activo</option>
+            <option value="false">Inactivo</option>
+        </select>
+        <button id="btn-guardar-edicion">Guardar Cambios</button>
+        <button onclick="document.getElementById('seccion-editar-usuario').style.display='none'">Cancelar</button>
+    </section>
 
+    <section id="seccion-lista-usuarios" style="display: none">
+        <h3>Usuarios Registrados</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tabla-usuarios-body"></tbody>
+        </table>
+    </section>
 
-
-<div id="seccion-platforms">
-
-    <h2>Gestión de Plataformas</h2>
-    
-    <div id="admin-platforms-input" >
-        <input type="text" id="input-nombre-plataforma" placeholder="Nueva plataforma">
-        <button id="btn-crear-plataforma">Agregar Plataforma</button>
+    <div id="seccion-platforms">
+        <h2>Gestión de Plataformas</h2>
+        <div id="admin-platforms-input">
+            <input type="text" id="input-nombre-plataforma" placeholder="Nueva plataforma">
+            <button id="btn-crear-plataforma">Agregar Plataforma</button>
+        </div>
+        <table>
+            <thead>
+                <tr><th>ID</th><th>Nombre</th><th>Acciones</th></tr>
+            </thead>
+            <tbody id="tabla-platforms-body"></tbody>
+        </table>
     </div>
 
-    <table>
-        <thead>
-            <tr><th>ID</th><th>Nombre</th><th>Acciones</th></tr>
-        </thead>
-        <tbody id="tabla-platforms-body"></tbody></table>
-</div>
-
-<div id="seccion-genres" style="display: none">
-    <h2>Gestión de Géneros</h2>
-    
-    <div id="admin-genres-input">
-        <input type="text" id="input-nombre-genero" placeholder="Nombre del género">
-        <button id="btn-crear-genero">Agregar Genero</button>
+    <div id="seccion-genres" style="display: none">
+        <h2>Gestión de Géneros</h2>
+        <div id="admin-genres-input">
+            <input type="text" id="input-nombre-genero" placeholder="Nombre del género">
+            <button id="btn-crear-genero">Agregar Genero</button>
+        </div>
+        <table>
+            <thead>
+                <tr><th>ID</th><th>Nombre</th><th>Acciones x si le agregamos eliminar</th></tr>
+            </thead>
+            <tbody id="tabla-genres-body"></tbody>
+        </table>
     </div>
 
-    <table>
-        <thead>
-            <tr><th>ID</th><th>Nombre</th><th>Acciones x si le agregamos eliminar</th></tr>
-        </thead>
-        <tbody id="tabla-genres-body"></tbody> </table>
-</div>
-
-
-<div id="seccion-reportes"  style="display: none">
-    <h3>Generar Reportes</h3>
-    
-    <input type="date" id="fecha-diaria">
-    <button id="btn-reporte-diario">PDF Diario</button>
-
-    <input type="number" id="anio-mensual" placeholder="Año (2026)">
-    <input type="number" id="mes-mensual" placeholder="Mes (1-12)">
-    <button id="btn-reporte-mensual">PDF Mensual</button>
-
-    <button id="btn-reporte-total">Descargar Reporte Total</button>
-</div>
-
-<section id="seccion-ventas" style="display: none;">
-    <h2>Registro de Ventas</h2>
-
-    <div>
-        <label for="venta-juego-select">Juego</label>
-        <select id="venta-juego-select"></select>
-
-        <label for="venta-cantidad">Cantidad</label>
-        <input type="number" id="venta-cantidad" min="1" value="1">
-
-        <button id="btn-agregar-item-venta">Agregar Item</button>
+    <div id="seccion-reportes" style="display: none">
+        <h3>Generar Reportes</h3>
+        <input type="date" id="fecha-diaria">
+        <button id="btn-reporte-diario">PDF Diario</button>
+        <input type="number" id="anio-mensual" placeholder="Año (2026)">
+        <input type="number" id="mes-mensual" placeholder="Mes (1-12)">
+        <button id="btn-reporte-mensual">PDF Mensual</button>
+        <button id="btn-reporte-total">Descargar Reporte Total</button>
     </div>
 
-    <h3>Detalle de la Venta</h3>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Juego</th>
-                <th>Cantidad</th>
-                <th>Stock Disponible</th>
-                <th>Accion</th>
-            </tr>
-        </thead>
-        <tbody id="tabla-venta-items-body"></tbody>
-    </table>
+    <section id="seccion-ventas" style="display: none;">
+        <h2>Registro de Ventas</h2>
+        <div>
+            <label for="venta-juego-select">Juego</label>
+            <select id="venta-juego-select"></select>
+            <label for="venta-cantidad">Cantidad</label>
+            <input type="number" id="venta-cantidad" min="1" value="1">
+            <button id="btn-agregar-item-venta">Agregar Item</button>
+        </div>
+        <h3>Detalle de la Venta</h3>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Juego</th>
+                    <th>Cantidad</th>
+                    <th>Stock Disponible</th>
+                    <th>Accion</th>
+                </tr>
+            </thead>
+            <tbody id="tabla-venta-items-body"></tbody>
+        </table>
+        <div>
+            <button id="btn-calcular-venta">Calcular Resumen</button>
+            <button id="btn-confirmar-venta" disabled>Confirmar Venta</button>
+            <button id="btn-limpiar-venta">Limpiar</button>
+        </div>
+        <h3>Resumen de Venta</h3>
+        <div id="resumen-venta"><p>Sin resumen calculado.</p></div>
+        <p id="estado-venta"></p>
+    </section>
 
-    <div>
-        <button id="btn-calcular-venta">Calcular Resumen</button>
-        <button id="btn-confirmar-venta" disabled>Confirmar Venta</button>
-        <button id="btn-limpiar-venta">Limpiar</button>
-    </div>
-
-    <h3>Resumen de Venta</h3>
-    <div id="resumen-venta"><p>Sin resumen calculado.</p></div>
-    <p id="estado-venta"></p>
-</section>
-
-
-<div id="seccion-inventario-vendedor" style="display: none">
-    
-    <h2>Control de Inventario vendedor</h2>
-
+    <div id="seccion-inventario-vendedor" style="display: none">
+        <h2>Control de Inventario vendedor</h2>
         <div style="margin-bottom: 15px;">
-        <input type="text" id="input-buscar-vendedor" placeholder="Buscar juego...">
+            <input type="text" id="input-buscar-vendedor" placeholder="Buscar juego...">
             <select id="filtro-plataforma-vendedor">
                 <option value="">Todas las plataformas</option>
                 <option value="PlayStation">PlayStation</option>
                 <option value="Xbox">Xbox</option>
                 <option value="PC">PC</option>
             </select>
+        </div>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Juego</th>
+                    <th>Precio</th>
+                    <th>Stock Local</th>
+                    <th>Stock Global</th>
+                </tr>
+            </thead>
+            <tbody id="tabla-inventario-vendedor-body"></tbody>
+        </table>
     </div>
 
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Juego</th>
-                <th>Precio</th>
-                <th>Stock Local</th>
-                <th>Stock Global</th>
-            </tr>
-        </thead>
-        <tbody id="tabla-inventario-vendedor-body"></tbody>
-    </table>
-</div>
-
-<div id="seccion-inventario-admin" style="display: none">
-    <h2>Control de Inventario admin</h2>
-
-    <div style="margin-bottom: 15px;">
-        <input type="text" id="input-buscar" placeholder="Buscar por nombre...">
-        <select id="filtro-plataforma">
-            <option value="">Todas las plataformas</option>
-            <option value="PlayStation">PlayStation</option>
-            <option value="Xbox">Xbox</option>
-            <option value="PC">PC</option>
-        </select>
+    <div id="seccion-inventario-admin" style="display: none">
+        <h2>Control de Inventario admin</h2>
+        <div style="margin-bottom: 15px;">
+            <input type="text" id="input-buscar" placeholder="Buscar por nombre...">
+            <select id="filtro-plataforma">
+                <option value="">Todas las plataformas</option>
+                <option value="PlayStation">PlayStation</option>
+                <option value="Xbox">Xbox</option>
+                <option value="PC">PC</option>
+            </select>
+        </div>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Juego</th>
+                    <th>Precio</th>
+                    <th>Stock Local</th>
+                    <th>Stock Global</th>
+                </tr>
+            </thead>
+            <tbody id="tabla-inventario-admin-body"></tbody>
+        </table>
     </div>
 
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Juego</th>
-                <th>Precio</th>
-                <th>Stock Local</th>
-                <th>Stock Global</th>
-            </tr>
-        </thead>
-        <tbody id="tabla-inventario-admin-body"></tbody>
-    </table>
-</div>
-
-
-<section id="seccion-historial">
-    <h2>Historial de Ventas</h2>
-    <div id="historial-container">
-        <p>Cargando ventas...</p>
-    </div>
-</section>
-
+    <section id="seccion-historial">
+        <h2>Historial de Ventas</h2>
+        <div id="historial-container">
+            <p>Cargando ventas...</p>
+        </div>
+    </section>
 
     <script src="js/login.js"></script>
     <script type="module" src="js/login.js"></script>
     <script type="module" src="js/main.js"></script>
-    
-
-
+</body>
 </html>
