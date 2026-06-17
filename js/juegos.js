@@ -53,9 +53,10 @@ export async function guardarJuego(event) {
     });
 
     if (response.ok) {
-        alert("¡Juego guardado!");
-        location.reload();
+        mostrarNotificacion("Agregado con éxito!", "success");
+        setTimeout(() => { location.reload(); }, 1500);
     } else {
-        alert("Error al guardar");
+        const error = await response.json();
+        mostrarNotificacion(`Error: ${error.detail || "Datos incorrectos"}`, "error");
     }
 }

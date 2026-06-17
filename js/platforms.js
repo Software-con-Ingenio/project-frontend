@@ -3,19 +3,13 @@
 export async function crearPlatform(event) {
     if (event) event.preventDefault();
 
-    const inputNombre = document.getElementById('input-nombre-plataforma');
-    const nombrePlataforma = inputNombre ? inputNombre.value.trim() : '';
-
-    if (!nombrePlataforma) {
-        alert('Ingresa un nombre de plataforma');
-        return;
-    }
-
+    // 1. Capturamos el valor del input
+    const nombrePlataforma = document.getElementById('input-nombre-plataforma').value;
     const token = localStorage.getItem('access_token');
 
     try {
-        // Compatibilidad con backend actual (query param) y contratos anteriores (JSON body).
-        let response = await fetch(`http://localhost:8000/platforms?nombre=${encodeURIComponent(nombrePlataforma)}`, {
+        // 2. Pasamos el nombre en la URL (?nombre=...) y quitamos el "body"
+        const response = await fetch(`http://localhost:8000/platforms?nombre=${encodeURIComponent(nombrePlataforma)}`, {
             method: 'POST',
             headers: { 
                 'Authorization': `Bearer ${token}` 
@@ -37,21 +31,17 @@ export async function crearPlatform(event) {
         }
 
         if (response.ok) {
-            alert("Plataforma creada con éxito");
-            location.reload(); 
+            mostrarNotificacion("¡Operación realizada con éxito!", "success");
+            setTimeout(() => { location.reload(); }, 1500);
         } else {
             let detalle = "No se pudo crear la plataforma";
         try {
             const error = await response.json();
-            detalle = error.detail || detalle;
-        } catch {
-            console.log("No fue posible obtener el detalle del error");
-        }
-            alert("Error: " + detalle);
+            mostrarNotificacion(`Error: ${error.detail || "Datos incorrectos"}`, "error");
         }
     } catch (err) {
-        console.error("Error:", err);
-        alert("Error de conexión con el servidor");
+        console.error("Error al crear plataforma:", err);
+        mostrarNotificacion("Error de conexión con el servidor", "error");
     }
 }
 
@@ -71,7 +61,7 @@ export async function cargarPlatforms() {
         
         const platforms = await response.json();
         const tbody = document.getElementById('tabla-platforms-body');
-        tbody.innerHTML = ""; 
+        if (tbody) tbody.innerHTML = ""; 
 
         platforms.forEach(p => {
             const fila = document.createElement('tr');
@@ -90,32 +80,40 @@ export async function cargarPlatforms() {
 
             if (esAdmin) {
                 const btnEliminar = fila.querySelector('.btn-eliminar');
-                btnEliminar.addEventListener('click', () => eliminarPlatform(p.id_plataforma));
+                if (btnEliminar) {
+                    btnEliminar.addEventListener('click', () => eliminarPlatform(p.id_plataforma));
+                }
             }
             
-            tbody.appendChild(fila);
+            if (tbody) tbody.appendChild(fila);
         });
     } catch (error) {
-        console.error(error);
+        console.error("Error al cargar plataformas:", error);
     }
 }
 
 export async function eliminarPlatform(id) {
-    if (!confirm("¿Seguro que quieres eliminar esta plataforma?")) return;
+    mostrarConfirmacion("¿Seguro que quieres eliminar esta plataforma?", async () => {
+        const token = localStorage.getItem('access_token');
+        
+        try {
+            const response = await fetch(`http://localhost:8000/platforms/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
 
-    const token = localStorage.getItem('access_token');
-    // Usamos 'id' aquí porque es lo que espera tu ruta después de corregir el router
-    const response = await fetch(`http://localhost:8000/platforms/${id}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
+            if (response.ok) {
+                mostrarNotificacion("¡Eliminado con éxito!", "success");
+                setTimeout(() => { location.reload(); }, 1500);
+            } else {
+                const error = await response.json();
+                mostrarNotificacion(`Error: ${error.detail || "Datos incorrectos"}`, "error");
+            }
+        } catch (err) {
+            console.error("Error al eliminar plataforma:", err);
+            mostrarNotificacion("Error de conexión con el servidor", "error");
+        }
     });
-
-    if (response.ok) {
-        alert("Eliminado");
-        location.reload();
-    } else {
-        alert("Error al eliminar");
-    }
 }
 
 // Compatibilidad con cualquier botón inline viejo que siga llamando a la función desde HTML.

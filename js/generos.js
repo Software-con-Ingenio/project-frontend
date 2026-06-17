@@ -1,22 +1,16 @@
 export async function crearGenero(event) {
     if (event) event.preventDefault();
 
-    const inputNombre = document.getElementById('input-nombre-genero');
-    const nombreGenero = inputNombre ? inputNombre.value.trim() : '';
-
-    if (!nombreGenero) {
-        alert('Ingresa un nombre de género');
-        return;
-    }
-
+    const nombreGenero = document.getElementById('input-nombre-genero').value;
     const token = localStorage.getItem('access_token');
 
     try {
-        // Intento 1: Como Query Parameter
-        let response = await fetch(`http://localhost:8000/genres?nombre=${encodeURIComponent(nombreGenero)}`, {
+        // Mandamos el nombre en la URL usando la variable "?nombre="
+        const response = await fetch(`http://localhost:8000/genres?nombre=${encodeURIComponent(nombreGenero)}`, {
             method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` 
             }
         });
 
@@ -36,24 +30,16 @@ export async function crearGenero(event) {
         }
 
         if (response.ok) {
-            alert("Género creado con éxito");
-            location.reload();
+            mostrarNotificacion("¡Operación realizada con éxito!", "success");
+            setTimeout(() => { location.reload(); }, 1500);
         } else {
-            let detalle = "No se pudo crear el género";
-
-            try {
-                const error = await response.json();
-                detalle = error.detail || detalle;
-            } catch {
-                console.log("No fue posible obtener el detalle del error");
-            }
-
-            alert("Error: " + detalle);
+            const error = await response.json();
+            mostrarNotificacion(`Error: ${error.detail || "Datos incorrectos"}`, "error");
         }
 
     } catch (err) {
-        console.error("Error:", err);
-        alert("Error de conexión con el servidor");
+        console.error("Error al crear género:", err);
+        mostrarNotificacion("Error de conexión con el servidor", "error");
     }
 }
 
@@ -73,7 +59,7 @@ export async function cargarGenres() {
         
         const genres = await response.json();
         const tbody = document.getElementById('tabla-genres-body');
-        tbody.innerHTML = ""; 
+        if (tbody) tbody.innerHTML = ""; 
 
         genres.forEach(g => {
             const fila = document.createElement('tr');
@@ -92,35 +78,42 @@ export async function cargarGenres() {
 
             if (esAdmin) {
                 const btnEliminar = fila.querySelector('.btn-eliminar');
-                btnEliminar.addEventListener('click', () => eliminarGenre(g.id_genero));
+                if (btnEliminar) {
+                    btnEliminar.addEventListener('click', () => eliminarGenre(g.id_genero));
+                }
             }
             
-            tbody.appendChild(fila);
+            if (tbody) tbody.appendChild(fila);
         });
     } catch (error) {
-        console.error(error);
+        console.error("Error al cargar géneros:", error);
     }
 }
 
 export async function eliminarGenre(id) {
-    if (!confirm("¿Seguro que quieres eliminar este género?")) return;
+    mostrarConfirmacion("¿Seguro que quieres eliminar este género?", async () => {
+        const token = localStorage.getItem('access_token');
+        
+        try {
+            const response = await fetch(`http://localhost:8000/genres/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
 
-    const token = localStorage.getItem('access_token');
-    
-    const response = await fetch(`http://localhost:8000/genres/${id}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
+            if (response.ok) {
+                mostrarNotificacion("¡Operación realizada con éxito!", "success");
+                setTimeout(() => { location.reload(); }, 1500);
+            } else {
+                const error = await response.json();
+                mostrarNotificacion(`Error: ${error.detail || "Datos incorrectos"}`, "error");
+            }
+        } catch (err) {
+            console.error("Error al eliminar género:", err);
+            mostrarNotificacion("Error de conexión con el servidor", "error");
+        }
     });
-
-    if (response.ok) {
-        alert("Eliminado");
-        location.reload();
-    } else {
-        alert("Error al eliminar");
-    }
 }
 
-// Compatibilidad por si algún botón viejo intenta llamar a la función
 if (typeof window !== 'undefined') {
     window.eliminarGenre = eliminarGenre;
 }

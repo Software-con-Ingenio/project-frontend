@@ -70,13 +70,14 @@ export function controlarVisibilidadBotones() {
     const token = localStorage.getItem('access_token');
     const seccionLogin = document.getElementById('seccion-login');
     const seccionLogout = document.getElementById('seccion-logout');
-    const btnVerPerfil = document.getElementById('btn-ver-perfil');
-    const seccionPerfil = document.getElementById('seccion-perfil');
+
+    const nombreUsuario = localStorage.getItem('nombre_usuario') || 'Usuario';
+    const textoNombre = document.getElementById('usuario-nombre-sesion');
 
     if (token) {
         if (seccionLogin) seccionLogin.style.display = 'none';
         if (seccionLogout) seccionLogout.style.display = 'block';
-        if (btnVerPerfil) btnVerPerfil.style.display = 'inline-block';
+        if (textoNombre) textoNombre.innerText = nombreUsuario;
     } else {
         if (seccionLogin) seccionLogin.style.display = 'block';
         if (seccionLogout) seccionLogout.style.display = 'none';
