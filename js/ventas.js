@@ -2,7 +2,6 @@ const API_BASE_URL = 'http://localhost:8000';
 
 let catalogoJuegos = [];
 let detallesVenta = [];
-let resumenCalculado = null;
 
 export async function inicializarVentas() {
 	const contenedor = document.getElementById('seccion-ventas');
@@ -150,7 +149,6 @@ function renderDetalleVenta() {
 
 function eliminarItemVenta(idJuego) {
 	detallesVenta = detallesVenta.filter((item) => Number(item.id_juego) !== Number(idJuego));
-	resumenCalculado = null;
 	renderDetalleVenta();
 	mostrarResumen(null);
 }
@@ -183,7 +181,6 @@ async function calcularResumenVenta() {
 			throw new Error(data.detail || 'No se pudo calcular el resumen.');
 		}
 
-		resumenCalculado = data;
 		mostrarResumen(data);
 		mostrarEstadoVenta('Resumen calculado. Puedes confirmar la venta.', false);
 
@@ -242,7 +239,6 @@ async function confirmarVenta() {
 
 function limpiarVenta() {
 	detallesVenta = [];
-	resumenCalculado = null;
 	renderDetalleVenta();
 	mostrarResumen(null);
 

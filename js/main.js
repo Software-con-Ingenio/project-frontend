@@ -50,6 +50,7 @@ import { cargarInventarioAdmin } from './inventario_admin.js';
 import { cargarInventarioVendedor } from './inventario_vendedor.js';
 import { inicializarVentas } from './ventas.js';
 import { historialManager } from './historial_ventas.js';
+import { cargarPerfil } from './perfil.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     const btnTema = document.getElementById('btn-tema');

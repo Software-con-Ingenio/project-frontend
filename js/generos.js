@@ -1,5 +1,3 @@
-// js/generos.js
-
 export async function crearGenero(event) {
     if (event) event.preventDefault();
 
@@ -16,6 +14,21 @@ export async function crearGenero(event) {
             }
         });
 
+        // Intento 2: Como JSON Body
+        if (!response.ok && response.status >= 400) {
+            response = await fetch('http://localhost:8000/genres', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    nombre: nombreGenero,
+                    nombre_genero: nombreGenero
+                })
+            });
+        }
+
         if (response.ok) {
             mostrarNotificacion("¡Operación realizada con éxito!", "success");
             setTimeout(() => { location.reload(); }, 1500);
@@ -23,6 +36,7 @@ export async function crearGenero(event) {
             const error = await response.json();
             mostrarNotificacion(`Error: ${error.detail || "Datos incorrectos"}`, "error");
         }
+
     } catch (err) {
         console.error("Error al crear género:", err);
         mostrarNotificacion("Error de conexión con el servidor", "error");

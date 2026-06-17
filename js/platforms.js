@@ -12,15 +12,30 @@ export async function crearPlatform(event) {
         const response = await fetch(`http://localhost:8000/platforms?nombre=${encodeURIComponent(nombrePlataforma)}`, {
             method: 'POST',
             headers: { 
-                'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}` 
             }
         });
+
+        if (!response.ok && (response.status === 400 || response.status === 404 || response.status === 405 || response.status === 415 || response.status === 422)) {
+            response = await fetch('http://localhost:8000/platforms', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    nombre: nombrePlataforma,
+                    nombre_plataforma: nombrePlataforma
+                })
+            });
+        }
 
         if (response.ok) {
             mostrarNotificacion("¡Operación realizada con éxito!", "success");
             setTimeout(() => { location.reload(); }, 1500);
         } else {
+            let detalle = "No se pudo crear la plataforma";
+        try {
             const error = await response.json();
             mostrarNotificacion(`Error: ${error.detail || "Datos incorrectos"}`, "error");
         }
