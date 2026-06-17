@@ -1,3 +1,5 @@
+// js/login.js
+
 document.addEventListener('DOMContentLoaded', () => {
     const token = localStorage.getItem('access_token');
     const seccionLogin = document.getElementById('seccion-login');
@@ -12,7 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
 document.getElementById('btn-login').addEventListener('click', async () => {
 
     if (localStorage.getItem('access_token')) {
-        alert("Ya tienes una sesión activa. Por favor, cierra sesión para entrar con otra cuenta.");
+        // Cambiado por notificación de advertencia/error
+        mostrarNotificacion("Ya tienes una sesión activa. Por favor, cierra sesión para entrar con otra cuenta.", "warning");
         return; // Detiene el código aquí y no intenta hacer el login
     }
 
@@ -36,15 +39,12 @@ document.getElementById('btn-login').addEventListener('click', async () => {
 
         const data = await response.json();
         
-        // ESTO ES LO IMPORTANTE:
         console.log("Datos recibidos del servidor:", data); 
 
         // 1. Guardamos el token
         localStorage.setItem('access_token', data.access_token);
         
         // 2. Intentamos guardar el rol. 
-        // Si el backend envía "id_rol", lo guardamos. 
-        // Si no, verificamos si envía "rol" o cualquier otro nombre.
         const rol = data.id_rol || data.rol; 
         
         if (rol) {
@@ -54,18 +54,28 @@ document.getElementById('btn-login').addEventListener('click', async () => {
             console.warn("Advertencia: El backend no envió información de rol.");
         }
 
-        alert("Login exitoso. Redirigiendo...");
-        window.location.href = 'index.html'; 
+        // Cambiado por notificación de éxito con temporizador para dar tiempo a verla
+        mostrarNotificacion("¡Login exitoso! Redirigiendo...", "success");
+        
+        setTimeout(() => {
+            window.location.href = 'index.html'; 
+        }, 1500);
+
     } catch (error) {
-        alert(error.message);
+        // Cambiado por notificación de error
+        mostrarNotificacion(error.message, "error");
     }
 });
 
 document.getElementById('btn-logout').addEventListener('click', () => {
-    // 1. Borramos el token del navegador
+    // 1. Borramos los datos del navegador
     localStorage.removeItem('access_token');
-    localStorage.removeItem('id_rol'); // También borramos esto
-    // 2. Opcional: Redirigir al login o limpiar la vista
-    alert("Has cerrado sesión correctamente.");
-    window.location.reload(); // Recarga la página para volver al estado inicial
+    localStorage.removeItem('id_rol'); 
+    
+    // Cambiado por notificación de info con temporizador antes de recargar
+    mostrarNotificacion("Has cerrado sesión correctamente.", "info");
+    
+    setTimeout(() => {
+        window.location.reload(); // Recarga la página para volver al estado inicial
+    }, 1500);
 });

@@ -1,8 +1,50 @@
+window.mostrarNotificacion = function(mensaje, tipo = 'info') {
+    let container = document.getElementById('toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toast-container';
+        document.body.appendChild(container);
+    }
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${tipo}`;
+    toast.innerText = mensaje;
+    container.appendChild(toast);
+    setTimeout(() => { toast.classList.add('show'); }, 50);
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => { toast.remove(); }, 400);
+    }, 3500);
+};
+
+window.mostrarConfirmacion = function(mensaje, accionConfirmada) {
+    const overlay = document.createElement('div');
+    overlay.className = 'confirm-overlay';
+    
+    overlay.innerHTML = `
+        <div class="confirm-box">
+            <p>${mensaje}</p>
+            <div class="confirm-botones">
+                <button id="confirm-btn-si" class="btn-confirm-si">Sí, eliminar</button>
+                <button id="confirm-btn-no" class="btn-confirm-no">Cancelar</button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(overlay);
+    
+    overlay.querySelector('#confirm-btn-no').onclick = () => overlay.remove();
+    
+    overlay.querySelector('#confirm-btn-si').onclick = () => {
+        accionConfirmada();
+        overlay.remove();
+    };
+};
+
 import { verificarSesion, controlarVisibilidadBotones } from './auth.js';
 import { cargarJuegos, guardarJuego, cargarOpcionesFormulario} from './juegos.js';
-import { guardarUsuario, cargarUsuarios, guardarEdicion} from './usuarios.js'; // <-- Importamos
+import { guardarUsuario, cargarUsuarios, guardarEdicion} from './usuarios.js';
 import { cargarGenres, crearGenero } from './generos.js';
-import { crearPlatform, cargarPlatforms} from './platforms.js?v=7.1';
+import { crearPlatform, cargarPlatforms } from './platforms.js';
 import { descargarReporte } from './reportes.js';
 import { cargarInventarioAdmin } from './inventario_admin.js';
 import { cargarInventarioVendedor } from './inventario_vendedor.js';
@@ -10,21 +52,20 @@ import { inicializarVentas } from './ventas.js';
 import { historialManager } from './historial_ventas.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
-    verificarSesion();
-    controlarVisibilidadBotones();
-    cargarJuegos();
-    cargarUsuarios();
-    cargarGenres();
-    cargarPlatforms();
-    cargarInventarioAdmin();
-    cargarInventarioVendedor();
-    inicializarVentas();
-    cargarOpcionesFormulario();
-    // Si estás en la página de administración
+    try { verificarSesion(); } catch(e) { console.error(e); }
+    try { controlarVisibilidadBotones(); } catch(e) { console.error(e); }
+    try { cargarJuegos(); } catch(e) { console.error(e); }
+    try { await cargarUsuarios(); } catch(e) { console.error(e); }
+    try { await cargarGenres(); } catch(e) { console.error(e); }
+    try { await cargarPlatforms(); } catch(e) { console.error(e); }
+    try { cargarInventarioAdmin(); } catch(e) { console.error(e); }
+    try { cargarInventarioVendedor(); } catch(e) { console.error(e); }
+    try { inicializarVentas(); } catch(e) { console.error(e); }
+    try { cargarOpcionesFormulario(); } catch(e) { console.error(e); }
+
     const contenedor = document.getElementById('historial-container');
     const seccionHistorial = document.getElementById('seccion-historial');
     
-    // Si el contenedor existe en esta página...
     if (contenedor) {
         const token = localStorage.getItem('access_token');
         const idRol = localStorage.getItem('id_rol');
@@ -32,85 +73,44 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (!esAdmin) {
             if (seccionHistorial) seccionHistorial.style.display = 'none';
-            if (contenedor) {
-                contenedor.innerHTML = "";
-                contenedor.style.display = 'none';
-            }
+            if (contenedor) contenedor.style.display = 'none';
         } else {
-            // Aseguramos que la sección y el contenedor estén visibles para administradores
             if (seccionHistorial) seccionHistorial.style.display = '';
             if (contenedor) contenedor.style.display = '';
             try {
                 const ventas = await historialManager.obtenerVentas();
-                console.log("Ventas recibidas:", ventas); // <-- MIRA LA CONSOLA PARA VER SI LLEGAN DATOS
                 historialManager.renderizarHistorial(ventas);
             } catch (error) {
-                contenedor.innerHTML = "Error al conectar con el servidor.";
+                if (contenedor) contenedor.innerHTML = "Error al conectar con el servidor.";
                 console.error(error);
             }
         }
     }
 
-
-
-
-
-
     const inputBuscar = document.getElementById('input-buscar');
-    if (inputBuscar) {
-        inputBuscar.addEventListener('input', window.filtrarJuegos);
-    }
+    if (inputBuscar) inputBuscar.addEventListener('input', window.filtrarJuegos);
 
     const selectPlataforma = document.getElementById('filtro-plataforma');
-    if (selectPlataforma) {
-        selectPlataforma.addEventListener('change', window.filtrarJuegos);
-    }
+    if (selectPlataforma) selectPlataforma.addEventListener('change', window.filtrarJuegos);
         
     const inputBuscarV = document.getElementById('input-buscar-vendedor');
-    if (inputBuscarV) {
-        inputBuscarV.addEventListener('input', window.filtrarJuegosVendedor);
-    }
+    if (inputBuscarV) inputBuscarV.addEventListener('input', window.filtrarJuegosVendedor);
 
     const selectPlataformaV = document.getElementById('filtro-plataforma-vendedor');
-    if (selectPlataformaV) {
-        selectPlataformaV.addEventListener('change', window.filtrarJuegosVendedor);
-    }
+    if (selectPlataformaV) selectPlataformaV.addEventListener('change', window.filtrarJuegosVendedor);
     
-
     const btnGuardarJuego = document.getElementById('btn-guardar');
     if (btnGuardarJuego) btnGuardarJuego.addEventListener('click', guardarJuego);
 
-    // Nuevo Evento para usuarios
     const btnGuardarUsuario = document.getElementById('btn-guardar-usuario');
     if (btnGuardarUsuario) btnGuardarUsuario.addEventListener('click', guardarUsuario);
 
     const btnGuardarEdicion = document.getElementById('btn-guardar-edicion');
-    if (btnGuardarEdicion) {
-        btnGuardarEdicion.addEventListener('click', guardarEdicion);
-    }
+    if (btnGuardarEdicion) btnGuardarEdicion.addEventListener('click', guardarEdicion);
 
     const btnCrearGenero = document.getElementById('btn-crear-genero');
     if (btnCrearGenero) btnCrearGenero.addEventListener('click', crearGenero);
 
     const btnCrearPlatform = document.getElementById('btn-crear-plataforma');
     if (btnCrearPlatform) btnCrearPlatform.addEventListener('click', crearPlatform);
-
-    document.getElementById('btn-reporte-diario').addEventListener('click', () => {
-        const fecha = document.getElementById('fecha-diaria').value;
-        if (!fecha) return alert("Selecciona una fecha");
-        descargarReporte(`ventas/reporte/pdf/diario/${fecha}`, `reporte_${fecha}.pdf`);
-    });
-
-    // Reporte Mensual
-    document.getElementById('btn-reporte-mensual').addEventListener('click', () => {
-        const anio = document.getElementById('anio-mensual').value;
-        const mes = document.getElementById('mes-mensual').value;
-        if (!anio || !mes) return alert("Completa año y mes");
-        descargarReporte(`ventas/reporte/pdf/mensual/${anio}/${mes}`, `reporte_${anio}_${mes}.pdf`);
-    });
-
-    // Reporte Total
-    document.getElementById('btn-reporte-total').addEventListener('click', () => {
-        descargarReporte('ventas/reporte/pdf/total', 'reporte_historico_total.pdf');
-    });
 });

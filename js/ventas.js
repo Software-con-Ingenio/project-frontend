@@ -70,47 +70,47 @@ function bindEventosVentas() {
 }
 
 function agregarItemVenta() {
-	const select = document.getElementById('venta-juego-select');
-	const inputCantidad = document.getElementById('venta-cantidad');
-	if (!select || !inputCantidad) return;
+    const select = document.getElementById('venta-juego-select');
+    const inputCantidad = document.getElementById('venta-cantidad');
+    if (!select || !inputCantidad) return;
 
-	const idJuego = Number(select.value);
-	const cantidad = Number(inputCantidad.value);
+    const idJuego = Number(select.value);
+    const cantidad = Number(inputCantidad.value);
 
-	if (!idJuego) {
-		alert('Selecciona un juego para agregar.');
-		return;
-	}
-	if (!cantidad || cantidad < 1) {
-		alert('Ingresa una cantidad valida.');
-		return;
-	}
+    if (!idJuego) {
+        mostrarNotificacion("Seleccione un Juego", "error");
+        return; // Agregamos return para que no siga ejecutando si hay error
+    }
+    if (!cantidad || cantidad < 1) {
+        mostrarNotificacion("Seleccione una cantidad válida", "error");
+        return; // Agregamos return para que no siga ejecutando si hay error
+    }
 
-	const juego = catalogoJuegos.find((j) => Number(j.id_juego) === idJuego);
-	if (!juego) {
-		alert('El juego seleccionado no existe.');
-		return;
-	}
+    const juego = catalogoJuegos.find((j) => Number(j.id_juego) === idJuego);
+    if (!juego) {
+        mostrarNotificacion("El juego no existe", "error");
+        return;
+    }
 
-	const itemExistente = detallesVenta.find((d) => d.id_juego === idJuego);
-	const cantidadTotal = (itemExistente ? itemExistente.cantidad : 0) + cantidad;
+    const itemExistente = detallesVenta.find((d) => d.id_juego === idJuego);
+    const cantidadTotal = (itemExistente ? itemExistente.cantidad : 0) + cantidad;
 
-	if (cantidadTotal > Number(juego.stock_local ?? 0)) {
-		alert(`Stock insuficiente para ${juego.nombre}. Stock disponible: ${juego.stock_local ?? 0}`);
-		return;
-	}
+    if (cantidadTotal > Number(juego.stock_local ?? 0)) {
+        mostrarNotificacion("Stock insuficiente en el local", "error");
+        return;
+    }
 
-	if (itemExistente) {
-		itemExistente.cantidad = cantidadTotal;
-	} else {
-		detallesVenta.push({ id_juego: idJuego, cantidad });
-	}
+    if (itemExistente) {
+        itemExistente.cantidad = cantidadTotal;
+    } else {
+        detallesVenta.push({ id_juego: idJuego, cantidad });
+    }
 
-	inputCantidad.value = '1';
-	resumenCalculado = null;
-	renderDetalleVenta();
-	mostrarResumen(null);
-	mostrarEstadoVenta('Producto agregado a la venta.', false);
+    inputCantidad.value = '1';
+    resumenCalculado = null;
+    renderDetalleVenta();
+    mostrarResumen(null);
+    mostrarEstadoVenta('Producto agregado a la venta.', false);
 }
 
 function renderDetalleVenta() {
@@ -157,8 +157,8 @@ function eliminarItemVenta(idJuego) {
 
 async function calcularResumenVenta() {
 	if (!detallesVenta.length) {
-		alert('Agrega al menos un item para calcular el resumen.');
-		return;
+		const error = await response.json();
+    	mostrarNotificacion(`Error: ${error.detail || "Agregue al menos un item"}`, "error");
 	}
 
 	try {
@@ -197,8 +197,8 @@ async function calcularResumenVenta() {
 
 async function confirmarVenta() {
 	if (!detallesVenta.length) {
-		alert('No hay detalles para registrar la venta.');
-		return;
+		const error = await response.json();
+    	mostrarNotificacion(`Error: ${error.detail || "No hay detalles"}`, "error");
 	}
 
 	try {
@@ -229,7 +229,8 @@ async function confirmarVenta() {
 
 		const ventaId = data.id_venta ? ` #${data.id_venta}` : '';
 		mostrarEstadoVenta(`Venta registrada con exito${ventaId}.`, false);
-		alert(`Venta realizada correctamente${ventaId}.`);
+		mostrarNotificacion("¡Venta realizada con éxito!", "success");
+    	setTimeout(() => { location.reload(); }, 1500);
 
 		limpiarVenta();
 		await cargarCatalogoJuegos();

@@ -1,5 +1,5 @@
 // js/usuarios.js
-// js/usuarios.js
+
 export async function guardarUsuario(event) {
     if (event) event.preventDefault();
 
@@ -19,40 +19,35 @@ export async function guardarUsuario(event) {
             headers: { 
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}` 
-            },
-            body: JSON.stringify(data)
+            }
         });
 
         if (response.ok) {
-            alert("Usuario creado con éxito");
-            location.reload(); 
+            mostrarNotificacion("¡Usuario creado con éxito!", "success");
+            setTimeout(() => { location.reload(); }, 1500);
         } else {
             const error = await response.json();
-            alert("Error: " + (error.detail || "No se pudo crear el usuario"));
+            mostrarNotificacion(`Error: ${error.detail || "Datos incorrectos"}`, "error");
         }
     } catch (err) {
-        console.error("Error:", err);
-        alert("Error de conexión con el servidor");
+        console.error("Error de conexión:", err);
+        mostrarNotificacion("Error de conexión con el servidor", "error");
     }
 }
-// js/usuarios.js
 
 // 1. Cargar lista de usuarios
-// js/usuarios.js
-// js/usuarios.js
-
 export async function cargarUsuarios() {
     const token = localStorage.getItem('access_token');
-    const idRol = localStorage.getItem('id_rol'); // Obtenemos el rol aquí
-    const esAdmin = (token && idRol === "1"); // Misma lógica que en auth.js
+    const idRol = localStorage.getItem('id_rol'); 
+    const esAdmin = (token && idRol === "1"); 
 
     if (!esAdmin) {
         return;
     }
 
-    const thAcciones = document.getElementById('th-acciones'); // Asegúrate de tener este ID en tu <th>
+    const thAcciones = document.getElementById('th-acciones'); 
     if (thAcciones) {
-    thAcciones.style.display = esAdmin ? '' : 'none';
+        thAcciones.style.display = esAdmin ? '' : 'none';
     }
     
     try {
@@ -64,53 +59,40 @@ export async function cargarUsuarios() {
         
         const usuarios = await response.json();
         const tbody = document.getElementById('tabla-usuarios-body');
-        tbody.innerHTML = ""; 
+        if (tbody) tbody.innerHTML = ""; 
 
         usuarios.forEach(u => {
             const fila = document.createElement('tr');
-            
-            // Creamos el HTML básico
             let htmlFila = `<td>${u.nombre}</td><td>${u.email}</td>`;
             
-            // SOLO agregamos la columna de acciones si es admin
             if (esAdmin) {
                 htmlFila += `<td>
                     <button class="btn-editar">Editar</button> 
                     <button class="btn-eliminar">Eliminar</button>
                 </td>`;
             } else {
-                htmlFila += `<td>-</td>`; // Celda vacía para usuarios normales
+                htmlFila += `<td>-</td>`; 
             }
             
             fila.innerHTML = htmlFila;
 
-            // Agregamos eventos solo si existen los botones
             if (esAdmin) {
                 fila.querySelector('.btn-editar').onclick = () => abrirEdicion(u);
                 fila.querySelector('.btn-eliminar').onclick = () => eliminarUsuario(u.id_usuario);
             }
             
-            tbody.appendChild(fila);
+            if (tbody) tbody.appendChild(fila);
         });
     } catch (error) {
-        console.error(error);
+        console.error("Error al cargar usuarios:", error);
     }
 }
 
-
-
-
-
-/////////////
-
-
-// js/usuarios.js
-
 // Al hacer clic en "Editar" en la tabla
 export function abrirEdicion(u) {
-    document.getElementById('seccion-editar-usuario').style.display = 'block';
+    const seccion = document.getElementById('seccion-editar-usuario');
+    if (seccion) seccion.style.display = 'block';
     
-    // Inyectar valores
     document.getElementById('edit-id').value = u.id_usuario;
     document.getElementById('edit-nombre').value = u.nombre;
     document.getElementById('edit-email').value = u.email;
@@ -119,12 +101,9 @@ export function abrirEdicion(u) {
 }
 
 // Enviar los cambios
-// js/usuarios.js
-
 export async function guardarEdicion() {
     const id = document.getElementById('edit-id').value;
     
-    // Enviamos los campos editables del usuario
     const datos = {
         nombre: document.getElementById('edit-nombre').value,
         email: document.getElementById('edit-email').value,
@@ -134,37 +113,50 @@ export async function guardarEdicion() {
 
     const token = localStorage.getItem('access_token');
     
-    const response = await fetch(`http://localhost:8000/usuarios/${id}`, {
-        method: 'PUT',
-        headers: { 
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}` 
-        },
-        body: JSON.stringify(datos)
-    });
+    try {
+        const response = await fetch(`http://localhost:8000/usuarios/${id}`, {
+            method: 'PUT',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` 
+            },
+            body: JSON.stringify(datos)
+        });
 
-    if (response.ok) {
-        alert("Usuario actualizado correctamente");
-        location.reload();
-    } else {
-        const error = await response.json();
-        alert("Error: " + (error.detail || "Error desconocido"));
+        if (response.ok) {
+            mostrarNotificacion("¡Usuario Actualizado!", "success");
+            setTimeout(() => { location.reload(); }, 1500);
+        } else {
+            const error = await response.json();
+            mostrarNotificacion(`Error: ${error.detail || "Datos incorrectos"}`, "error");
+        }
+    } catch (err) {
+        console.error(err);
+        mostrarNotificacion("Error al conectar con el servidor", "error");
     }
 }
 
+// Eliminar Usuario
 export async function eliminarUsuario(id) {
-    if (!confirm("¿Seguro que quieres eliminar este usuario?")) return;
+    mostrarConfirmacion("¿Seguro que quieres eliminar este usuario?", async () => {
+        const token = localStorage.getItem('access_token');
+        
+        try {
+            const response = await fetch(`http://localhost:8000/usuarios/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
 
-    const token = localStorage.getItem('access_token');
-    const response = await fetch(`http://localhost:8000/usuarios/${id}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
+            if (response.ok) {
+                mostrarNotificacion("¡Eliminado con éxito!", "success");
+                setTimeout(() => { location.reload(); }, 1500);
+            } else {
+                const error = await response.json();
+                mostrarNotificacion(`Error: ${error.detail || "Error al eliminar"}`, "error");
+            }
+        } catch (err) {
+            console.error(err);
+            mostrarNotificacion("Error al conectar con el servidor", "error");
+        }
     });
-
-    if (response.ok) {
-        alert("Eliminado");
-        location.reload();
-    } else {
-        alert("Error al eliminar");
-    }
 }
