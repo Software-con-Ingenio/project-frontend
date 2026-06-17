@@ -19,18 +19,20 @@
 }
 
 [data-theme="light"] {
-    --bg-main: #f3f4f6;       
-    --bg-card: #ffffff;       
-    --bg-input: #f9fafb;      
-    --bg-table: #ffffff;      
-    --bg-th: #f3f4f6;         
-    --bg-tr-hover: #f9fafb;   
+    --bg-main: #ebecee;         
+    --bg-card: #f6f7f9;         
+    --bg-input: #ffffff;        
+    --bg-table: #f6f7f9;        
+    --bg-th: #ebecee;           
+    --bg-tr-hover: #eff0f2;     
     --bg-btn-sec: transparent;
-    --bg-btn-sec-hover: #e5e7eb;
-    --text-main: #111827;    
-    --text-muted: #4b5563;   
-    --border-color: #d1d5db;
-    --shadow-color: rgba(0, 0, 0, 0.08);
+    --bg-btn-sec-hover: #dcdee2;
+    --text-main: #1f2937;       
+    --text-muted: #6b7280;      
+    --primary-red: #b91c1c;   
+    --red-hover: #991b1b;     
+    --border-color: #d2d5da;
+    --shadow-color: rgba(0, 0, 0, 0.05); 
     --bg-confirm: #ffffff;
 }
 
@@ -323,9 +325,23 @@ tr:hover td {
 .theme-toggle-btn {
     position: fixed;
     bottom: 20px;
-    left: 20px;
-    z-index: 10000;
-    box-shadow: 0 4px 12px var(--shadow-color);
+    right: 20px;
+    z-index: 9999; /* Se asegura de quedar por encima de cualquier tabla o tarjeta */
+    background: transparent;
+    border: 2px solid currentColor;
+    color: currentColor;
+    border-radius: 8px;
+    padding: 0;
+    cursor: pointer;
+    overflow: hidden;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+    opacity: 0.6; /* Sutil por defecto */
 }
 
 .barra-perfil-superior {
@@ -378,12 +394,26 @@ tr:hover td {
 }
 
 .btn-logout-retro {
-    background-color: var(--primary-red) !important;
-    color: white !important;
-    padding: 8px 16px !important;
-    font-size: 0.8rem !important;
+    display: inline-flex !important; /* Fuerza el contenedor flexible alineado con el texto de la barra */
+    align-items: center !important;  /* Centra verticalmente el texto y el icono de forma exacta */
+    justify-content: center;
+    gap: 8px;                        /* Separa el texto del icono */
+    padding: 8px 16px;               /* Controla que el espacio interno sea igual arriba y abajo */
+    cursor: pointer;
+    line-height: 1;                  /* Evita que la altura de línea por defecto mueva el texto */
+    
+    /* Agrega aquí abajo tus estilos visuales (colores, bordes, etc.) */
+    border: 1px solid var(--border-color);
+    background-color: transparent;
+    color: var(--text-main);
+    border-radius: 6px;
+    font-size: 14px;
 }
 
-.btn-logout-retro:hover {
-    background-color: var(--red-hover) !important;
+/* Ajuste crucial para el icono de Google */
+.btn-logout-retro .material-icons {
+    font-size: 18px;                 /* Tamaño ideal para que haga juego con la fuente */
+    display: inline-block;
+    vertical-align: middle;          /* Doble seguro de alineación */
+    margin: 0;                       /* Elimina márgenes extraños que traen los iconos */
 }

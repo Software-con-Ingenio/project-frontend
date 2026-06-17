@@ -85,6 +85,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     try { cargarOpcionesFormulario(); } catch(e) { console.error(e); }
 
     const token = localStorage.getItem('access_token');
+    const idRol = localStorage.getItem('id_rol');
     const nombreUsuario = localStorage.getItem('nombre_usuario') || 'Usuario';
     const seccionLogout = document.getElementById('seccion-logout');
     const textoNombre = document.getElementById('usuario-nombre-sesion');
@@ -92,6 +93,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (token) {
         if (seccionLogout) seccionLogout.style.display = 'flex';
         if (textoNombre) textoNombre.innerText = nombreUsuario;
+
+        const btnNavJuegos = document.getElementById('btn-nav-juegos');
+        const btnNavUsuarios = document.getElementById('btn-nav-usuarios');
+
+        if (idRol === "2") {
+            if (btnNavJuegos) btnNavJuegos.style.display = 'none';
+            if (btnNavUsuarios) btnNavUsuarios.style.display = 'none';
+        } else {
+            if (btnNavJuegos) btnNavJuegos.style.display = '';
+            if (btnNavUsuarios) btnNavUsuarios.style.display = '';
+        }
     } else {
         if (seccionLogout) seccionLogout.style.display = 'none';
     }
@@ -100,7 +112,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const seccionHistorial = document.getElementById('seccion-historial');
     
     if (contenedor) {
-        const idRol = localStorage.getItem('id_rol');
         const esAdmin = (token && idRol === "1");
 
         if (!esAdmin) {

@@ -7,11 +7,12 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <title>RetroTrack - Panel de Admin</title>
 </head>
 <body>
 
-    <button id="btn-tema" class="theme-toggle-btn">🌓 Cambiar Tema</button>
+    <button id="btn-tema" class="theme-toggle-btn">🌓</button>
 
     <div id="seccion-login">
         <h2>Iniciar Sesión</h2>
@@ -26,9 +27,10 @@
         <span>Bienvenido, <strong id="usuario-nombre-sesion">Usuario</strong></span>
     </div>
     <div class="perfil-usuario-opciones">
-        <button onclick="document.getElementById('seccion-juegos').scrollIntoView({behavior: 'smooth'})" class="btn-perfil-opcion">Juegos</button>
-        <button onclick="document.getElementById('seccion-historial').scrollIntoView({behavior: 'smooth'})" class="btn-perfil-opcion">Historial</button>
-        <button id="btn-logout" class="btn-logout-retro">Cerrar Sesión</button>
+        <button id="btn-logout" class="btn-logout-retro">
+            <span>Cerrar Sesión</span>
+            <span class="material-icons">logout</span>
+        </button>
     </div>
 </div>
 <hr id="divisor-perfil" style="display: none;">

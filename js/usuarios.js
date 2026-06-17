@@ -19,7 +19,8 @@ export async function guardarUsuario(event) {
             headers: { 
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}` 
-            }
+            },
+            body: JSON.stringify(data) // <-- Corregido: Ahora sí viajan los datos al servidor
         });
 
         if (response.ok) {
@@ -27,7 +28,14 @@ export async function guardarUsuario(event) {
             setTimeout(() => { location.reload(); }, 1500);
         } else {
             const error = await response.json();
-            mostrarNotificacion(`Error: ${error.detail || "Datos incorrectos"}`, "error");
+            
+            // Si FastAPI devuelve un error de validación estructurado (Pydantic array)
+            if (error.detail && Array.isArray(error.detail)) {
+                const msg = error.detail.map(err => `${err.loc[1] || err.loc[0]}: ${err.msg}`).join(', ');
+                mostrarNotificacion(`Error: ${msg}`, "error");
+            } else {
+                mostrarNotificacion(`Error: ${error.detail || "Datos incorrectos"}`, "error");
+            }
         }
     } catch (err) {
         console.error("Error de conexión:", err);
