@@ -20,10 +20,18 @@
         <button id="btn-login">Entrar</button>
     </div>
 
-    <div id="seccion-logout" style="display: none;">
-        <button id="btn-logout">Cerrar Sesión</button>
+    <div id="seccion-logout" class="barra-perfil-superior" style="display: none;">
+    <div class="perfil-usuario-info">
+        <span class="avatar-icono">👤</span>
+        <span>Bienvenido, <strong id="usuario-nombre-sesion">Usuario</strong></span>
     </div>
-    <hr>
+    <div class="perfil-usuario-opciones">
+        <button onclick="document.getElementById('seccion-juegos').scrollIntoView({behavior: 'smooth'})" class="btn-perfil-opcion">Juegos</button>
+        <button onclick="document.getElementById('seccion-historial').scrollIntoView({behavior: 'smooth'})" class="btn-perfil-opcion">Historial</button>
+        <button id="btn-logout" class="btn-logout-retro">Cerrar Sesión</button>
+    </div>
+</div>
+<hr id="divisor-perfil" style="display: none;">
 
     <section id="seccion-juegos">       
         <h2>Añadir Nuevo Juego</h2>

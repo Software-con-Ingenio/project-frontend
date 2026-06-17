@@ -84,11 +84,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     try { inicializarVentas(); } catch(e) { console.error(e); }
     try { cargarOpcionesFormulario(); } catch(e) { console.error(e); }
 
+    const token = localStorage.getItem('access_token');
+    const nombreUsuario = localStorage.getItem('nombre_usuario') || 'Usuario';
+    const seccionLogout = document.getElementById('seccion-logout');
+    const textoNombre = document.getElementById('usuario-nombre-sesion');
+
+    if (token) {
+        if (seccionLogout) seccionLogout.style.display = 'flex';
+        if (textoNombre) textoNombre.innerText = nombreUsuario;
+    } else {
+        if (seccionLogout) seccionLogout.style.display = 'none';
+    }
+
     const contenedor = document.getElementById('historial-container');
     const seccionHistorial = document.getElementById('seccion-historial');
     
     if (contenedor) {
-        const token = localStorage.getItem('access_token');
         const idRol = localStorage.getItem('id_rol');
         const esAdmin = (token && idRol === "1");
 
