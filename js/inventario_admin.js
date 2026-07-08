@@ -1,3 +1,4 @@
+// Variable global para mantener los datos y filtrar sobre ellos
 let juegosData = []; 
 
 export async function cargarInventarioAdmin() {
@@ -9,19 +10,19 @@ export async function cargarInventarioAdmin() {
     
     try {
         const response = await fetch('http://localhost:8000/juegos');
-        juegosData = await response.json(); 
-        renderizarTabla(juegosData);        
-    } catch (e) { 
-        console.error("Error cargando inventario", e); 
-    }
+        juegosData = await response.json(); // Guardamos los datos recibidos
+        renderizarTabla(juegosData);        // Dibujamos la tabla inicial
+    } catch (e) { console.error("Error cargando inventario", e); }
 }
 
+// Función que dibuja la tabla según la lista que reciba
 function renderizarTabla(lista) {
     const tbody = document.getElementById('tabla-inventario-admin-body');
     if (!tbody) return;
     tbody.innerHTML = "";
 
     lista.forEach(j => {
+        console.log("Datos del juego:", j); // <-- AÑADE ESTO
         const fila = document.createElement('tr');
         fila.innerHTML = `
             <td>${j.nombre}</td>
@@ -34,12 +35,14 @@ function renderizarTabla(lista) {
     });
 }
 
+// Lógica de Filtros (RF_10 y RF_11)
 window.filtrarJuegos = () => {
     const texto = document.getElementById('input-buscar').value.toLowerCase();
     const plat = document.getElementById('filtro-plataforma').value;
 
     const filtrados = juegosData.filter(j => {
         const coincideNombre = j.nombre.toLowerCase().includes(texto);
+        // Ajusta 'j.plataforma' según el nombre real del campo en tu JSON
         const coincidePlat = plat === "" || j.plataforma === plat; 
         return coincideNombre && coincidePlat;
     });
@@ -53,7 +56,7 @@ window.actualizarJuego = async (id) => {
     const stockInput = document.getElementById(`stock-${id}`);
 
     if (!precioInput || !stockInput) {
-        mostrarNotificacion("No se encontraron los campos del juego para actualizar.", "error");
+        alert('No se encontraron los campos del juego para actualizar.');
         return;
     }
 
@@ -61,34 +64,29 @@ window.actualizarJuego = async (id) => {
     const stock_local = Number(stockInput.value);
 
     if (Number.isNaN(precio) || precio < 0) {
-        mostrarNotificacion("El precio debe ser un número válido y no negativo.", "error");
+        alert('El precio debe ser un numero valido y no negativo.');
         return;
     }
 
     if (Number.isNaN(stock_local) || stock_local < 0) {
-        mostrarNotificacion("El stock local debe ser un número válido y no negativo.", "error");
+        alert('El stock local debe ser un numero valido y no negativo.');
         return;
     }
     
-    try {
-        const response = await fetch(`http://localhost:8000/juegos/${id}`, {
-            method: 'PUT',
-            headers: { 
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json' 
-            },
-            body: JSON.stringify({ precio, stock_local })
-        });
+    const response = await fetch(`http://localhost:8000/juegos/${id}`, {
+        method: 'PUT',
+        headers: { 
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json' 
+        },
+        body: JSON.stringify({ precio, stock_local })
+    });
 
-        if (response.ok) {
-            mostrarNotificacion("¡Actualizado con éxito!", "success");
-            await cargarInventarioAdmin();
-        } else {
-            const error = await response.json();
-            mostrarNotificacion(`Error: ${error.detail || "No se pudo actualizar"}`, "error");
-        }
-    } catch (err) {
-        console.error(err);
-        mostrarNotificacion("Error de conexión con el servidor", "error");
+    if (response.ok) {
+        alert("¡Actualizado con éxito!");
+        await cargarInventarioAdmin();
+    } else {
+        const error = await response.json();
+        alert("Error: " + (error.detail || "No se pudo actualizar"));
     }
 };
