@@ -41,6 +41,11 @@ document.getElementById('btn-login').addEventListener('click', async () => {
 
         // 1. Guardamos el token
         localStorage.setItem('access_token', data.access_token);
+
+        // 1.1 Guardamos el nombre para mostrar "Bienvenido, <nombre>"
+        if (data.nombre_usuario) {
+            localStorage.setItem('nombre_usuario', data.nombre_usuario);
+        }
         
         // 2. Intentamos guardar el rol. 
         // Si el backend envía "id_rol", lo guardamos. 
@@ -64,6 +69,7 @@ document.getElementById('btn-login').addEventListener('click', async () => {
 document.getElementById('btn-logout').addEventListener('click', () => {
     // 1. Borramos el token del navegador
     localStorage.removeItem('access_token');
+    localStorage.removeItem('nombre_usuario');
     localStorage.removeItem('id_rol'); // También borramos esto
     // 2. Opcional: Redirigir al login o limpiar la vista
     alert("Has cerrado sesión correctamente.");

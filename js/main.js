@@ -8,6 +8,7 @@ import { cargarInventarioAdmin } from './inventario_admin.js';
 import { cargarInventarioVendedor } from './inventario_vendedor.js';
 import { inicializarVentas } from './ventas.js';
 import { historialManager } from './historial_ventas.js';
+import { cargarPerfil } from './perfil.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     verificarSesion();
@@ -20,10 +21,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     cargarInventarioVendedor();
     inicializarVentas();
     cargarOpcionesFormulario();
+
     // Si estás en la página de administración
     const contenedor = document.getElementById('historial-container');
     const seccionHistorial = document.getElementById('seccion-historial');
     
+
+    const btnPerfil = document.getElementById('btn-ver-perfil');
+    if (btnPerfil) {
+        btnPerfil.addEventListener('click', () => {
+            cargarPerfil();
+        });
+    }
+
     // Si el contenedor existe en esta página...
     if (contenedor) {
         const token = localStorage.getItem('access_token');
